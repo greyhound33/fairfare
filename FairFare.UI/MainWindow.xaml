@@ -1,0 +1,115 @@
+﻿<Window x:Class="FairFare.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Title="FairFare" Height="740" Width="1100" WindowStartupLocation="CenterScreen">
+    <Grid Margin="16">
+        <TabControl>
+            <TabItem Header="Trip">
+                <Grid Margin="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.1*"/>
+                        <ColumnDefinition Width="1.9*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                        <TextBlock Text="Trip title" FontWeight="Bold" Margin="0,0,0,6"/>
+                        <TextBox Name="TripTitleTextBox" Text="Weekend in Lviv" Margin="0,0,0,12"/>
+                        <Button Name="CreateTripButton" Content="Create trip" Click="CreateTripButton_Click" Padding="8,4" Margin="0,0,0,16"/>
+
+                        <TextBlock Text="Add participant" FontWeight="Bold" Margin="0,0,0,6"/>
+                        <TextBox Name="ParticipantNameTextBox" Margin="0,0,0,8"/>
+                        <Button Name="AddParticipantButton" Content="Add participant" Click="AddParticipantButton_Click" Padding="8,4"/>
+
+                        <ListBox Name="ParticipantsListBox" Margin="0,12,0,0" Height="220"/>
+                    </StackPanel>
+
+                    <Border Grid.Column="1" Padding="16" Background="#F8FBFF" CornerRadius="12">
+                        <StackPanel>
+                            <TextBlock Text="Trip overview" FontWeight="Bold" FontSize="18" Margin="0,0,0,12"/>
+                            <TextBlock Name="TripSummaryTextBlock" TextWrapping="Wrap" FontSize="14"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Expenses">
+                <Grid Margin="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.1*"/>
+                        <ColumnDefinition Width="1.9*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                        <TextBlock Text="Description" FontWeight="Bold" Margin="0,0,0,6"/>
+                        <TextBox Name="ExpenseDescriptionTextBox" Text="Dinner" Margin="0,0,0,12"/>
+
+                        <TextBlock Text="Amount" FontWeight="Bold" Margin="0,0,0,6"/>
+                        <TextBox Name="ExpenseAmountTextBox" Text="120" Margin="0,0,0,12"/>
+
+                        <TextBlock Text="Payer" FontWeight="Bold" Margin="0,0,0,6"/>
+                        <ComboBox Name="PayerComboBox" Margin="0,0,0,12"/>
+
+                        <Button Name="AddExpenseButton" Content="Add expense" Click="AddExpenseButton_Click" Padding="8,4"/>
+                    </StackPanel>
+
+                    <Border Grid.Column="1" Padding="16" Background="#F7FAFF" CornerRadius="12">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <TextBlock Name="ExpenseSummaryTextBlock" TextWrapping="Wrap" FontSize="14"/>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Balances">
+                <Border Margin="12" Padding="16" Background="#F7FAFF" CornerRadius="12">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <TextBlock Name="BalancesTextBlock" FontSize="15" TextWrapping="Wrap"/>
+                    </ScrollViewer>
+                </Border>
+            </TabItem>
+
+            <TabItem Header="Route">
+                <Grid Margin="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.1*"/>
+                        <ColumnDefinition Width="1.9*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                        <TextBlock Text="Location name" FontWeight="Bold" Margin="0,0,0,6"/>
+                        <TextBox Name="RouteLocationTextBox" Text="Rynok Square" Margin="0,0,0,12"/>
+
+                        <TextBlock Text="Order" FontWeight="Bold" Margin="0,0,0,6"/>
+                        <TextBox Name="RouteOrderTextBox" Text="1" Margin="0,0,0,12"/>
+
+                        <Button Name="AddRouteButton" Content="Add route location" Click="AddRouteButton_Click" Padding="8,4"/>
+                    </StackPanel>
+
+                    <Border Grid.Column="1" Padding="16" Background="#F7FAFF" CornerRadius="12">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <TextBlock Name="RouteSummaryTextBlock" TextWrapping="Wrap" FontSize="14"/>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Report">
+                <Border Margin="12" Padding="16" Background="#F7FAFF" CornerRadius="12">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Button Name="GenerateReportButton" Grid.Row="0" Content="Generate report" Click="GenerateReportButton_Click" Padding="10,6" HorizontalAlignment="Left" Margin="0,0,0,12"/>
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <TextBlock Name="ReportTextBlock" FontSize="14" TextWrapping="Wrap"/>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
