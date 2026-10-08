@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BLL\BLL.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\FairFare.BLL\FairFare.BLL.csproj" />
+    <ProjectReference Include="..\FairFare.Domain\FairFare.Domain.csproj" />
   </ItemGroup>
 
 </Project>
