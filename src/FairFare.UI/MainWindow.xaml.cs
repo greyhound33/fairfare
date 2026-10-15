@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Windows;
 using FairFare.BLL;
-using FairFare.Domain;
+using FairFare.Domain.Entities;
 
 namespace FairFare.UI;
 

@@ -1,4 +1,4 @@
-using FairFare.Domain;
+using FairFare.Domain.Entities;
 
 namespace FairFare.BLL;
 

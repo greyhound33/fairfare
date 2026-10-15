@@ -1,5 +1,5 @@
 using FairFare.BLL.Repositories;
-using FairFare.Domain;
+using FairFare.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FairFare.DAL.Repositories;
