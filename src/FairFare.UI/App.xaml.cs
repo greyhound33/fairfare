@@ -1,11 +1,13 @@
 ﻿using System.Windows;
 using FairFare.BLL.Interfaces;
 using FairFare.BLL.Services;
+using FairFare.DAL;
 using FairFare.DAL.Repositories;
 using FairFare.Domain.Interfaces;
 using FairFare.UI.ViewModels;
 using FairFare.UI.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 namespace FairFare.UI;
 
@@ -29,6 +31,7 @@ public partial class App : Application
     private void ConfigureServices(IServiceCollection services)
     {
         // DAL
+        services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=fairfare.db"));
         services.AddScoped<IEventRepository, EventRepository>();
 
         // BLL
