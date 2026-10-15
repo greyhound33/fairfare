@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="FairFare.BLL/FairFare.BLL.csproj" />
+  <Project Path="FairFare.DAL/FairFare.DAL.csproj" />
+  <Project Path="FairFare.Domain/FairFare.Domain.csproj" />
+  <Project Path="FairFare.Tests/FairFare.Tests.csproj" />
+  <Project Path="FairFare.UI/FairFare.UI.csproj" />
+</Solution>
