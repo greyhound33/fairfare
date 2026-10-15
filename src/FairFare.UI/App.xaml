@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:FairFare.UI"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
     </Application.Resources>
 </Application>

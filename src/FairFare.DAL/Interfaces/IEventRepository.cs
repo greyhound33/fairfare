@@ -1,6 +1,6 @@
-using FairFare.Domain.Entities;
+﻿using FairFare.Domain.Entities;
 
-namespace FairFare.BLL.Repositories;
+namespace FairFare.DAL.Interfaces;
 
 public interface ITripEventRepository
 {

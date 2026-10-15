@@ -1,4 +1,4 @@
-using FairFare.BLL.Repositories;
+using FairFare.DAL.Interfaces;
 using FairFare.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

@@ -10,4 +10,3 @@ namespace FairFare.UI;
 public partial class App : Application
 {
 }
-
