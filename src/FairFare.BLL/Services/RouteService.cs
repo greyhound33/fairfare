@@ -1,8 +1,9 @@
 using FairFare.Domain.Entities;
+using FairFare.BLL.Interfaces;
 
-namespace FairFare.BLL;
+namespace FairFare.BLL.Services;
 
-public sealed class RouteService
+public sealed class RouteService : IRouteService
 {
     public RouteLocation AddLocation(TripEvent tripEvent, string locationName, int orderIndex)
     {

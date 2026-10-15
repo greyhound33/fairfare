@@ -1,8 +1,9 @@
 using FairFare.Domain.Entities;
+using FairFare.BLL.Interfaces;
 
-namespace FairFare.BLL;
+namespace FairFare.BLL.Services;
 
-public sealed class ReportService
+public sealed class ReportService : IReportService
 {
     public Report CreateReport(TripEvent tripEvent, IReadOnlyList<BalanceEntry> balances, IReadOnlyList<Transfer> transfers)
     {

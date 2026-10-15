@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Windows;
-using FairFare.BLL;
+using FairFare.BLL.Services;
 using FairFare.Domain.Entities;
 
 namespace FairFare.UI;
@@ -8,7 +8,7 @@ namespace FairFare.UI;
 public partial class MainWindow : Window
 {
     private readonly EventService _eventService = new();
-    private readonly FinancialModule _financialModule = new();
+    private readonly FinancialService _financialService = new();
     private readonly RouteService _routeService = new();
     private readonly ReportService _reportService = new();
     private TripEvent _trip;
@@ -33,8 +33,8 @@ public partial class MainWindow : Window
         _routeService.AddLocation(_trip, "Castle Hill", 3);
 
         var payerId = _trip.Participants.First().Id;
-        _financialModule.AddExpense(_trip, "Hotel booking", 360m, payerId, _trip.Participants.Select(p => p.Id));
-        _financialModule.AddExpense(_trip, "Dinner", 180m, _trip.Participants[1].Id, _trip.Participants.Select(p => p.Id));
+        _financialService.AddExpense(_trip, "Hotel booking", 360m, payerId, _trip.Participants.Select(p => p.Id));
+        _financialService.AddExpense(_trip, "Dinner", 180m, _trip.Participants[1].Id, _trip.Participants.Select(p => p.Id));
     }
 
     private void RefreshView()
@@ -49,11 +49,11 @@ public partial class MainWindow : Window
             PayerComboBox.SelectedIndex = 0;
         }
 
-        var balances = _financialModule.CalculateBalances(_trip);
+        var balances = _financialService.CalculateBalances(_trip);
         BalancesTextBlock.Text = BuildBalanceSummary(balances);
         ExpenseSummaryTextBlock.Text = BuildExpenseSummary();
 
-        var transfers = _financialModule.OptimizeTransfers(_trip);
+        var transfers = _financialService.OptimizeTransfers(_trip);
         RouteSummaryTextBlock.Text = BuildRouteSummary();
         ReportTextBlock.Text = BuildReportSummary(balances, transfers);
     }
@@ -219,7 +219,7 @@ public partial class MainWindow : Window
 
         try
         {
-            _financialModule.AddExpense(_trip, description, amount, payer.Id, debtorIds);
+            _financialService.AddExpense(_trip, description, amount, payer.Id, debtorIds);
             RefreshView();
         }
         catch (InvalidOperationException ex)
@@ -255,8 +255,8 @@ public partial class MainWindow : Window
 
     private void GenerateReportButton_Click(object sender, RoutedEventArgs e)
     {
-        var balances = _financialModule.CalculateBalances(_trip);
-        var transfers = _financialModule.OptimizeTransfers(_trip);
+        var balances = _financialService.CalculateBalances(_trip);
+        var transfers = _financialService.OptimizeTransfers(_trip);
         ReportTextBlock.Text = BuildReportSummary(balances, transfers);
         _reportService.CreateReport(_trip, balances, transfers);
     }

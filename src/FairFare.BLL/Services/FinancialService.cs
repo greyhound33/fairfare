@@ -1,8 +1,9 @@
 using FairFare.Domain.Entities;
+using FairFare.BLL.Interfaces;
 
-namespace FairFare.BLL;
+namespace FairFare.BLL.Services;
 
-public sealed class FinancialModule
+public sealed class FinancialService : IFinancialService
 {
     public ExpenseValidationResult ValidateExpense(TripEvent tripEvent, Guid payerId, decimal totalAmount, IEnumerable<Guid> debtorIds)
     {

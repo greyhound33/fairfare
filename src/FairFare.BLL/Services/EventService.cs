@@ -1,8 +1,9 @@
 using FairFare.Domain.Entities;
+using FairFare.BLL.Interfaces;
 
-namespace FairFare.BLL;
+namespace FairFare.BLL.Services;
 
-public sealed class EventService
+public sealed class EventService : IEventService
 {
     public TripEvent CreateEvent(string title)
     {
