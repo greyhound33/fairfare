@@ -1,4 +1,4 @@
-﻿namespace FairFare.Domain.Entities;
+﻿namespace FairFare.Domain.Models;
 
 public sealed class ExpenseValidationResult
 {

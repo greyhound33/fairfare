@@ -1,5 +1,6 @@
 using FairFare.Domain.Entities;
 using FairFare.BLL.Interfaces;
+using FairFare.Domain.Models;
 
 namespace FairFare.BLL.Services;
 
