@@ -1,10 +1,10 @@
-using FairFare.DAL.Interfaces;
+using FairFare.Domain.Interfaces;
 using FairFare.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FairFare.DAL.Repositories;
 
-public sealed class EventRepository : ITripEventRepository
+public sealed class EventRepository : IEventRepository
 {
     private readonly AppDbContext _context;
 

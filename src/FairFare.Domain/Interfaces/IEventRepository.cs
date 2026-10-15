@@ -1,8 +1,8 @@
 ﻿using FairFare.Domain.Entities;
 
-namespace FairFare.DAL.Interfaces;
+namespace FairFare.Domain.Interfaces;
 
-public interface ITripEventRepository
+public interface IEventRepository
 {
     Task<List<TripEvent>> GetAllAsync();
     Task<TripEvent?> GetByIdAsync(Guid eventId);

@@ -1,12 +1,44 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
+using FairFare.BLL.Interfaces;
+using FairFare.BLL.Services;
+using FairFare.DAL.Repositories;
+using FairFare.Domain.Interfaces;
+using FairFare.UI.ViewModels;
+using FairFare.UI.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FairFare.UI;
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
 public partial class App : Application
 {
+    public static IServiceProvider ServiceProvider { get; private set; } = null!;
+
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        base.OnStartup(e);
+
+        var serviceCollection = new ServiceCollection();
+        ConfigureServices(serviceCollection);
+
+        ServiceProvider = serviceCollection.BuildServiceProvider();
+
+        var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+        mainWindow.Show();
+    }
+
+    private void ConfigureServices(IServiceCollection services)
+    {
+        // DAL
+        services.AddScoped<IEventRepository, EventRepository>();
+
+        // BLL
+        services.AddScoped<IEventService, EventService>();
+        services.AddScoped<IFinancialService, FinancialService>();
+        services.AddScoped<IRouteService, RouteService>();
+        services.AddScoped<IReportService, ReportService>();
+
+        // UI ViewModels & Views
+        services.AddTransient<MainViewModel>();
+        services.AddTransient<MainWindow>();
+    }
 }
