@@ -1,4 +1,5 @@
 ﻿using FairFare.BLL.Interfaces;
+using FairFare.BLL.Services;
 using FairFare.Domain.Entities;
 using FairFare.Domain.Models;
 using System.Collections.ObjectModel;
@@ -15,6 +16,7 @@ public class MainViewModel : INotifyPropertyChanged
     private readonly IFinancialService _financialService;
     private readonly IRouteService _routeService;
     private readonly IReportService _reportService;
+    private readonly TripStorageService _storage;
 
     private TripEvent _trip;
     private string _tripTitle = "Weekend in Lviv";
@@ -60,13 +62,26 @@ public class MainViewModel : INotifyPropertyChanged
         IEventService eventService,
         IFinancialService financialService,
         IRouteService routeService,
-        IReportService reportService)
+        IReportService reportService,
+        TripStorageService storage)
     {
         _eventService = eventService;
         _financialService = financialService;
         _routeService = routeService;
         _reportService = reportService;
-        _trip = _eventService.CreateEvent(TripTitle);
+        _storage = storage;
+
+        var saved = Task.Run(() => _storage.LoadFirstAsync()).GetAwaiter().GetResult();
+        if (saved is not null)
+        {
+            _trip = saved;
+        }
+        else
+        {
+            _trip = _eventService.CreateEvent(TripTitle);
+            SeedDefaultTrip();
+            Save();
+        }
 
         CreateTripCommand = new RelayCommand(CreateTrip);
         AddParticipantCommand = new RelayCommand(AddParticipant);
@@ -74,8 +89,21 @@ public class MainViewModel : INotifyPropertyChanged
         AddRouteLocationCommand = new RelayCommand(AddRouteLocation);
         GenerateReportCommand = new RelayCommand(GenerateReport);
 
-        SeedDefaultTrip();
         RefreshView();
+    }
+
+    private bool Save()
+    {
+        try
+        {
+            Task.Run(() => _storage.SaveAsync(_trip)).GetAwaiter().GetResult();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Не вдалося зберегти в БД: " + ex.Message;
+            return false;
+        }
     }
 
     private void SeedDefaultTrip()
@@ -93,6 +121,7 @@ public class MainViewModel : INotifyPropertyChanged
         _financialService.AddExpense(_trip, "Hotel booking", 360m, payerId, _trip.Participants.Select(p => p.Id));
         _financialService.AddExpense(_trip, "Dinner", 180m, _trip.Participants[1].Id, _trip.Participants.Select(p => p.Id));
     }
+
     private void RefreshView()
     {
         var selectedPayer = SelectedPayer;
@@ -118,6 +147,7 @@ public class MainViewModel : INotifyPropertyChanged
         RouteSummary = BuildRouteSummary();
         ReportSummary = BuildReportSummary(balances, transfers);
     }
+
     private string BuildTripSummary()
     {
         var participants = _trip.Participants.Select(participant => participant.Name);
@@ -132,6 +162,7 @@ public class MainViewModel : INotifyPropertyChanged
 
         return string.Join(Environment.NewLine, lines);
     }
+
     private string BuildBalanceSummary(IReadOnlyList<BalanceEntry> balances)
     {
         if (balances.Count == 0)
@@ -147,6 +178,7 @@ public class MainViewModel : INotifyPropertyChanged
 
         return builder.ToString();
     }
+
     private string BuildExpenseSummary()
     {
         if (_trip.Expenses.Count == 0)
@@ -163,6 +195,7 @@ public class MainViewModel : INotifyPropertyChanged
 
         return builder.ToString();
     }
+
     private string BuildRouteSummary()
     {
         if (_trip.RouteLocations.Count == 0)
@@ -178,6 +211,7 @@ public class MainViewModel : INotifyPropertyChanged
 
         return builder.ToString();
     }
+
     private string BuildReportSummary(IReadOnlyList<BalanceEntry> balances, IReadOnlyList<Transfer> transfers)
     {
         var builder = new StringBuilder();
@@ -207,6 +241,7 @@ public class MainViewModel : INotifyPropertyChanged
 
         return builder.ToString();
     }
+
     private void CreateTrip()
     {
         var title = TripTitle.Trim();
@@ -218,6 +253,7 @@ public class MainViewModel : INotifyPropertyChanged
 
         _trip.Title = title;
         ErrorMessage = string.Empty;
+        Save();
         RefreshView();
     }
 
@@ -235,6 +271,7 @@ public class MainViewModel : INotifyPropertyChanged
             _eventService.AddParticipant(_trip, name);
             ParticipantName = string.Empty;
             ErrorMessage = string.Empty;
+            Save();
             RefreshView();
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
@@ -278,6 +315,7 @@ public class MainViewModel : INotifyPropertyChanged
         {
             _financialService.AddExpense(_trip, description, amount, payer.Id, debtorIds);
             ErrorMessage = string.Empty;
+            Save();
             RefreshView();
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
@@ -304,6 +342,7 @@ public class MainViewModel : INotifyPropertyChanged
             RouteLocationName = string.Empty;
             RouteOrder = (_trip.RouteLocations.Count + 1).ToString();
             ErrorMessage = string.Empty;
+            Save();
             RefreshView();
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
@@ -318,6 +357,7 @@ public class MainViewModel : INotifyPropertyChanged
         var transfers = _financialService.OptimizeTransfers(_trip);
         ReportSummary = BuildReportSummary(balances, transfers);
         _reportService.CreateReport(_trip, balances, transfers);
+        Save();
         ErrorMessage = string.Empty;
     }
 
@@ -346,4 +386,3 @@ public class MainViewModel : INotifyPropertyChanged
         public void Execute(object? parameter) => execute();
     }
 }
-

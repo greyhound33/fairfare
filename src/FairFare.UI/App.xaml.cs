@@ -47,6 +47,7 @@ public partial class App : Application
         // DAL
         services.AddDbContext<AppDbContext>(options => options.UseNpgsql(FairFareDb.ConnectionString));
         services.AddScoped<IEventRepository, EventRepository>();
+        services.AddScoped<TripStorageService>();
 
         // BLL
         services.AddScoped<IEventService, EventService>();
