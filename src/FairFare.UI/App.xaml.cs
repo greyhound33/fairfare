@@ -23,6 +23,20 @@ public partial class App : Application
         ConfigureServices(serviceCollection);
 
         ServiceProvider = serviceCollection.BuildServiceProvider();
+        
+        try
+        {
+            using var scope = ServiceProvider.CreateScope();
+            scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                "Не вдалося підключитися до бази даних. Запустіть docker compose up -d і перевірте FAIRFARE_CONNECTION.\n\n" + ex.Message,
+                "FairFare", MessageBoxButton.OK, MessageBoxImage.Error);
+            Shutdown();
+            return;
+        }
 
         var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
         mainWindow.Show();
@@ -31,8 +45,9 @@ public partial class App : Application
     private void ConfigureServices(IServiceCollection services)
     {
         // DAL
-        services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=fairfare.db"));
+        services.AddDbContext<AppDbContext>(options => options.UseNpgsql(FairFareDb.ConnectionString));
         services.AddScoped<IEventRepository, EventRepository>();
+        services.AddScoped<TripStorageService>();
 
         // BLL
         services.AddScoped<IEventService, EventService>();

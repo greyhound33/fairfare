@@ -55,21 +55,27 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Description).HasMaxLength(200).IsRequired();
-            entity.Property(e => e.TotalAmount).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.TotalAmount).HasPrecision(18, 2);
+            entity.ToTable(t => t.HasCheckConstraint("CK_Expenses_TotalAmount_Positive", "\"TotalAmount\" > 0"));
             entity.HasMany(e => e.Shares)
                 .WithOne(s => s.Expense)
                 .HasForeignKey(s => s.ExpenseId)
                 .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.Payer)
+                .WithMany(p => p.PaidExpenses)
+                .HasForeignKey(e => e.PayerId)
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.Entity<ExpenseShare>(entity =>
         {
             entity.HasKey(s => s.Id);
-            entity.Property(s => s.OwedAmount).HasColumnType("decimal(18,2)");
+            entity.Property(s => s.OwedAmount).HasPrecision(18, 2);
+            entity.ToTable(t => t.HasCheckConstraint("CK_ExpenseShares_OwedAmount_NonNegative", "\"OwedAmount\" >= 0"));
             entity.HasOne(s => s.Debtor)
                 .WithMany(p => p.Debts)
                 .HasForeignKey(s => s.DebtorId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.Entity<RouteLocation>(entity =>
@@ -85,6 +91,11 @@ public class AppDbContext : DbContext
             entity.Property(r => r.Title).HasMaxLength(200).IsRequired();
             entity.Property(r => r.Summary).IsRequired();
         });
+
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            modelBuilder.Entity(entityType.ClrType).Property("Id").ValueGeneratedNever();
+        }
 
         base.OnModelCreating(modelBuilder);
     }
