@@ -8,4 +8,7 @@ public interface IEventRepository
     Task<TripEvent?> GetByIdAsync(Guid eventId);
     Task SaveAsync(TripEvent tripEvent);
     Task DeleteAsync(Guid eventId);
+    
+    Task<IReadOnlyList<TripEvent>> FindByTitleAsync(string text);
+    Task<decimal> GetTotalSpentAsync(Guid eventId);
 }
