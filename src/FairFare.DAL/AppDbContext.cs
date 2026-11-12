@@ -23,6 +23,7 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Title).HasMaxLength(200).IsRequired();
+            entity.ToTable(t => t.HasCheckConstraint("CK_Events_Title_NotBlank", "length(btrim(\"Title\")) > 0"));
             entity.HasMany(e => e.Participants)
                 .WithOne(p => p.Event)
                 .HasForeignKey(p => p.EventId)
@@ -45,6 +46,7 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(p => p.Id);
             entity.Property(p => p.Name).HasMaxLength(150).IsRequired();
+            entity.ToTable(t => t.HasCheckConstraint("CK_Participants_Name_NotBlank", "length(btrim(\"Name\")) > 0"));
             entity.HasOne(p => p.Event)
                 .WithMany(e => e.Participants)
                 .HasForeignKey(p => p.EventId)
