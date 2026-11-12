@@ -3,119 +3,212 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Title="FairFare" Height="740" Width="1100" WindowStartupLocation="CenterScreen">
-    <Grid Margin="16">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="{Binding ErrorMessage}" Foreground="Firebrick" TextWrapping="Wrap" Margin="0,0,0,8"/>
-        <TabControl Grid.Row="1">
-            <TabItem Header="Trip">
-                <Grid Margin="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.1*"/>
-                        <ColumnDefinition Width="1.9*"/>
-                    </Grid.ColumnDefinitions>
+        Title="FairFare" Height="740" Width="1100" WindowStartupLocation="CenterScreen"
+        Background="#E6F2F8">
 
-                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
-                        <TextBlock Text="Trip title" FontWeight="Bold" Margin="0,0,0,6"/>
-                        <TextBox Text="{Binding TripTitle, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,12"/>
-                        <Button Content="Create trip" Command="{Binding CreateTripCommand}" Padding="8,4" Margin="0,0,0,16"/>
+    <Grid>
+        <!-- ФОНОВЕ ЗОБРАЖЕННЯ -->
+        <Grid.Background>
+            <ImageBrush ImageSource="/FairFare.UI;component/Assets/background.jpg" Stretch="UniformToFill" Opacity="0.85"/>
+        </Grid.Background>
 
-                        <TextBlock Text="Add participant" FontWeight="Bold" Margin="0,0,0,6"/>
-                        <TextBox Text="{Binding ParticipantName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,8"/>
-                        <Button Content="Add participant" Command="{Binding AddParticipantCommand}" Padding="8,4"/>
+        <Grid Margin="36,38,34,21">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                        <ListBox ItemsSource="{Binding Participants}" SelectedItem="{Binding SelectedParticipant}" Margin="0,12,0,0" Height="180"/>
-                        <Button Content="Remove selected participant" Command="{Binding RemoveParticipantCommand}" Padding="8,4" Margin="0,8,0,0"/>
-                    </StackPanel>
+            <!-- 1. ВЕРХНЯ ПАНЕЛЬ (Логотип, дзвіночок, профіль) -->
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-                    <Border Grid.Column="1" Padding="16" Background="#F8FBFF" CornerRadius="12">
-                        <StackPanel>
-                            <TextBlock Text="Trip overview" FontWeight="Bold" FontSize="18" Margin="0,0,0,12"/>
-                            <TextBlock Text="{Binding TripSummary}" TextWrapping="Wrap" FontSize="14"/>
+                <!-- Логотип -->
+                <Border Width="65" Height="65" CornerRadius="16" Background="White" Padding="6">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" Direction="270" ShadowDepth="3" Opacity="0.1"/>
+                    </Border.Effect>
+                    <Image Source="/FairFare.UI;component/Assets/app_icon.jpg" Stretch="Uniform" Margin="-10,-10,-16,-10"/>
+                </Border>
+
+                <!-- Права частина: дзвіночок та профіль -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Дзвіночок сповіщень -->
+                    <Border Width="50" Height="50" CornerRadius="25" Background="#D5E8F2" Margin="0,0,15,0" Cursor="Hand">
+                        <Grid>
+                            <TextBlock Text="🔔" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#5A809E"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Профіль користувача -->
+                    <Border Width="120" Height="50" CornerRadius="25" Background="#D5E8F2" Padding="5">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         </StackPanel>
                     </Border>
-                </Grid>
-            </TabItem>
+                </StackPanel>
+            </Grid>
 
-            <TabItem Header="Expenses">
-                <Grid Margin="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.1*"/>
-                        <ColumnDefinition Width="1.9*"/>
-                    </Grid.ColumnDefinitions>
+            <!-- 2. ЗАГОЛОВОК ТА КНОПКА СТВОРЕННЯ ПОДОРОЖІ -->
+            <Grid Grid.Row="1" Margin="0,0,0,25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
-                        <TextBlock Text="Description" FontWeight="Bold" Margin="0,0,0,6"/>
-                        <TextBox Text="{Binding ExpenseDescription, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,12"/>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Ваші подорожі" FontSize="32" FontWeight="Bold" Foreground="#2C5270"/>
+                    <TextBlock Text="Плануйте пригоди та діліть спільні витрати з друзями без зайвих зусиль" FontSize="15" Foreground="#5A809E" Margin="0,4,0,0"/>
+                </StackPanel>
 
-                        <TextBlock Text="Amount" FontWeight="Bold" Margin="0,0,0,6"/>
-                        <TextBox Text="{Binding ExpenseAmount, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,12"/>
+                <Button Grid.Column="1" Command="{Binding CreateTripCommand}" Background="#568AAB" Foreground="White"
+                        FontSize="15" FontWeight="SemiBold" Padding="22,12" BorderBrush="{x:Null}" Cursor="Hand" VerticalAlignment="Center">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="22" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                    <TextBlock Text="+ Створити подорож" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
+                </Button>
+            </Grid>
 
-                        <TextBlock Text="Payer" FontWeight="Bold" Margin="0,0,0,6"/>
-                        <ComboBox ItemsSource="{Binding Payers}" SelectedItem="{Binding SelectedPayer, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,12"/>
+            <!-- 3. КАРТКИ ПОДОРОЖЕЙ -->
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                <WrapPanel>
 
-                        <Button Content="Add expense" Command="{Binding AddExpenseCommand}" Padding="8,4"/>
-                    </StackPanel>
+                    <!-- КАРТКА 1: Славське (Активна) -->
+                    <Border Width="500" Height="290" Background="White" CornerRadius="24" Margin="0,0,25,20" Padding="25">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="15" Direction="270" ShadowDepth="4" Opacity="0.08"/>
+                        </Border.Effect>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                    <Border Grid.Column="1" Padding="16" Background="#F7FAFF" CornerRadius="12">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <TextBlock Text="{Binding ExpenseSummary}" TextWrapping="Wrap" FontSize="14"/>
-                        </ScrollViewer>
+                            <!-- Верх: іконка міста зліва, статус праворуч -->
+                            <Grid Grid.Row="0">
+                                <Image Source="/FairFare.UI;component/Assets/autorisations.jpg"
+                                       Width="60" Height="40" HorizontalAlignment="Left" Stretch="Uniform"/>
+                                <Border Background="#D1E7DD" CornerRadius="15" Padding="14,6"
+                                        HorizontalAlignment="Right" VerticalAlignment="Top">
+                                    <TextBlock Text="Активна" Foreground="#0F5132" FontWeight="SemiBold" FontSize="13"/>
+                                </Border>
+                            </Grid>
+
+                            <!-- Назва та дати -->
+                            <StackPanel Grid.Row="1" Margin="0,10,0,0">
+                                <TextBlock Text="Славське" FontSize="28" FontWeight="Bold" Foreground="#2C4A60"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                    <TextBlock Text="📅 12 бер – 22 бер 2026" FontSize="13" Foreground="#7A9EBA" FontWeight="Medium"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Прогрес бюджету -->
+                            <StackPanel Grid.Row="2" VerticalAlignment="Center">
+                                <Grid Margin="0,0,0,6">
+                                    <TextBlock Text="Витрачено: 7800" Foreground="#5A809E" FontSize="13"/>
+                                    <TextBlock Text="Бюджет: 9400" Foreground="#7A9EBA" FontSize="13" HorizontalAlignment="Right"/>
+                                </Grid>
+                                <ProgressBar Value="7800" Maximum="9400" Height="6" Background="#E2EDF5"
+                                             Foreground="#568AAB" BorderBrush="{x:Null}"/>
+                            </StackPanel>
+
+                            <!-- Низ: аватари + кнопка -->
+                            <Grid Grid.Row="3">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Border Width="30" Height="30" CornerRadius="15" Background="#F3E9C6" Margin="0,0,-8,0">
+                                        <TextBlock Text="МЛ" FontSize="11" FontWeight="Bold" Foreground="#5A809E"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <Border Width="30" Height="30" CornerRadius="15" Background="#CDE2D5" Margin="0,0,-8,0">
+                                        <TextBlock Text="КГ" FontSize="11" FontWeight="Bold" Foreground="#5A809E"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <Border Width="30" Height="30" CornerRadius="15" Background="#F5C6CB" Margin="0,0,-8,0">
+                                        <TextBlock Text="ОМ" FontSize="11" FontWeight="Bold" Foreground="#5A809E"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <Border Width="30" Height="30" CornerRadius="15" Background="#E2EDF5">
+                                        <TextBlock Text="+1" FontSize="11" FontWeight="Bold" Foreground="#5A809E"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </StackPanel>
+                                <Button Content="Відкрити -&gt;" HorizontalAlignment="Right" Background="{x:Null}"
+                                        BorderBrush="{x:Null}" Foreground="#5A809E" FontWeight="SemiBold" FontSize="14" Cursor="Hand"/>
+                            </Grid>
+                        </Grid>
                     </Border>
-                </Grid>
-            </TabItem>
 
-            <TabItem Header="Balances">
-                <Border Margin="12" Padding="16" Background="#F7FAFF" CornerRadius="12">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <TextBlock Text="{Binding BalanceSummary}" FontSize="15" TextWrapping="Wrap"/>
-                    </ScrollViewer>
-                </Border>
-            </TabItem>
+                    <!-- КАРТКА 2: Відень (Запланована) -->
+                    <Border Width="500" Height="290" Background="White" CornerRadius="24" Margin="0,0,25,20" Padding="25">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="15" Direction="270" ShadowDepth="4" Opacity="0.08"/>
+                        </Border.Effect>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-            <TabItem Header="Route">
-                <Grid Margin="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.1*"/>
-                        <ColumnDefinition Width="1.9*"/>
-                    </Grid.ColumnDefinitions>
+                            <!-- Верх: іконка міста зліва, статус праворуч -->
+                            <Grid Grid.Row="0">
+                                <Image Source="/FairFare.UI;component/Assets/vienna.jpg"
+                                       Width="60" Height="40" HorizontalAlignment="Left" Stretch="Uniform"/>
+                                <Border Background="#D6EAF2" CornerRadius="15" Padding="14,6"
+                                        HorizontalAlignment="Right" VerticalAlignment="Top">
+                                    <TextBlock Text="Запланована" Foreground="#2C5270" FontWeight="SemiBold" FontSize="13"/>
+                                </Border>
+                            </Grid>
 
-                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
-                        <TextBlock Text="Location name" FontWeight="Bold" Margin="0,0,0,6"/>
-                        <TextBox Text="{Binding RouteLocationName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,12"/>
+                            <!-- Назва та дати -->
+                            <StackPanel Grid.Row="1" Margin="0,10,0,0">
+                                <TextBlock Text="Відень" FontSize="28" FontWeight="Bold" Foreground="#2C4A60"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                    <TextBlock Text="📅 14 трав – 19 трав 2026" FontSize="13" Foreground="#7A9EBA" FontWeight="Medium"/>
+                                </StackPanel>
+                            </StackPanel>
 
-                        <TextBlock Text="Order" FontWeight="Bold" Margin="0,0,0,6"/>
-                        <TextBox Text="{Binding RouteOrder, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,12"/>
+                            <!-- Прогрес бюджету -->
+                            <StackPanel Grid.Row="2" VerticalAlignment="Center">
+                                <Grid Margin="0,0,0,6">
+                                    <TextBlock Text="Витрачено: 3443" Foreground="#5A809E" FontSize="13"/>
+                                    <TextBlock Text="Бюджет: 14000" Foreground="#7A9EBA" FontSize="13" HorizontalAlignment="Right"/>
+                                </Grid>
+                                <ProgressBar Value="3443" Maximum="14000" Height="6" Background="#E2EDF5"
+                                             Foreground="#568AAB" BorderBrush="{x:Null}"/>
+                            </StackPanel>
 
-                        <Button Content="Add route location" Command="{Binding AddRouteLocationCommand}" Padding="8,4"/>
-                    </StackPanel>
-
-                    <Border Grid.Column="1" Padding="16" Background="#F7FAFF" CornerRadius="12">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <TextBlock Text="{Binding RouteSummary}" TextWrapping="Wrap" FontSize="14"/>
-                        </ScrollViewer>
+                            <!-- Низ: аватари + кнопка -->
+                            <Grid Grid.Row="3">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Border Width="30" Height="30" CornerRadius="15" Background="#F3E9C6" Margin="0,0,-8,0">
+                                        <TextBlock Text="МЛ" FontSize="11" FontWeight="Bold" Foreground="#5A809E"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <Border Width="30" Height="30" CornerRadius="15" Background="#F5C6CB">
+                                        <TextBlock Text="ОМ" FontSize="11" FontWeight="Bold" Foreground="#5A809E"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </StackPanel>
+                                <Button Content="Відкрити -&gt;" HorizontalAlignment="Right" Background="{x:Null}"
+                                        BorderBrush="{x:Null}" Foreground="#5A809E" FontWeight="SemiBold" FontSize="14" Cursor="Hand"/>
+                            </Grid>
+                        </Grid>
                     </Border>
-                </Grid>
-            </TabItem>
 
-            <TabItem Header="Report">
-                <Border Margin="12" Padding="16" Background="#F7FAFF" CornerRadius="12">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-
-                        <Button Grid.Row="0" Content="Generate report" Command="{Binding GenerateReportCommand}" Padding="10,6" HorizontalAlignment="Left" Margin="0,0,0,12"/>
-                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                            <TextBlock Text="{Binding ReportSummary}" FontSize="14" TextWrapping="Wrap"/>
-                        </ScrollViewer>
-                    </Grid>
-                </Border>
-            </TabItem>
-        </TabControl>
+                </WrapPanel>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Window>
