@@ -23,6 +23,8 @@ public sealed class EventService : IEventService
             throw new ArgumentNullException(nameof(tripEvent));
         }
 
+        EnsureActive(tripEvent);
+
         var name = participantName?.Trim();
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -49,6 +51,8 @@ public sealed class EventService : IEventService
             throw new ArgumentNullException(nameof(tripEvent));
         }
 
+        EnsureActive(tripEvent);
+
         var participant = tripEvent.Participants.SingleOrDefault(p => p.Id == participantId);
         if (participant is null)
         {
@@ -61,6 +65,14 @@ public sealed class EventService : IEventService
         }
 
         tripEvent.Participants.Remove(participant);
+    }
+
+    private static void EnsureActive(TripEvent tripEvent)
+    {
+        if (!tripEvent.IsActive)
+        {
+            throw new InvalidOperationException("Completed trip cannot be changed.");
+        }
     }
 
     public void UpdateStatus(TripEvent tripEvent, bool isActive)
