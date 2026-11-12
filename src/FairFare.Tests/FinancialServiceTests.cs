@@ -110,9 +110,16 @@ public class FinancialServiceTests
 
         var transfers = service.OptimizeTransfers(trip);
 
-        Assert.Single(transfers);
-        Assert.Equal(maksym.Id, transfers[0].FromParticipantId);
-        Assert.Equal(anna.Id, transfers[0].ToParticipantId);
-        Assert.Equal(100m, transfers[0].Amount);
+        Assert.Equal(2, transfers.Count);
+
+        Assert.All(transfers, transfer =>
+        {
+            Assert.Equal(anna.Id, transfer.ToParticipantId);
+            Assert.Equal(100m, transfer.Amount);
+        });
+
+        Assert.Contains(transfers, transfer => transfer.FromParticipantId == maksym.Id);
+        Assert.Contains(transfers, transfer => transfer.FromParticipantId == oleh.Id);
+        Assert.Equal(200m, transfers.Sum(transfer => transfer.Amount));
     }
 }
