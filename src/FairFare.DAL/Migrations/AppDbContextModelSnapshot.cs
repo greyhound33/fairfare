@@ -98,7 +98,10 @@ namespace FairFare.DAL.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("Participants");
+                    b.ToTable("Participants", t =>
+                        {
+                            t.HasCheckConstraint("CK_Participants_Name_NotBlank", "length(btrim(\"Name\")) > 0");
+                        });
                 });
 
             modelBuilder.Entity("FairFare.Domain.Entities.Report", b =>
@@ -167,7 +170,10 @@ namespace FairFare.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", t =>
+                        {
+                            t.HasCheckConstraint("CK_Events_Title_NotBlank", "length(btrim(\"Title\")) > 0");
+                        });
                 });
 
             modelBuilder.Entity("FairFare.Domain.Entities.Expense", b =>
