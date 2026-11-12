@@ -24,6 +24,7 @@ public class MainViewModel : INotifyPropertyChanged
     private string _expenseDescription = "Dinner";
     private string _expenseAmount = "120";
     private string? _selectedPayer;
+    private string? _selectedParticipant;
     private string _routeLocationName = "Rynok Square";
     private string _routeOrder = "1";
     private string _tripSummary = string.Empty;
@@ -43,6 +44,7 @@ public class MainViewModel : INotifyPropertyChanged
     public string ExpenseDescription { get => _expenseDescription; set => SetProperty(ref _expenseDescription, value); }
     public string ExpenseAmount { get => _expenseAmount; set => SetProperty(ref _expenseAmount, value); }
     public string? SelectedPayer { get => _selectedPayer; set => SetProperty(ref _selectedPayer, value); }
+    public string? SelectedParticipant { get => _selectedParticipant; set => SetProperty(ref _selectedParticipant, value); }
     public string RouteLocationName { get => _routeLocationName; set => SetProperty(ref _routeLocationName, value); }
     public string RouteOrder { get => _routeOrder; set => SetProperty(ref _routeOrder, value); }
     public string TripSummary { get => _tripSummary; private set => SetProperty(ref _tripSummary, value); }
@@ -54,6 +56,7 @@ public class MainViewModel : INotifyPropertyChanged
 
     public ICommand CreateTripCommand { get; }
     public ICommand AddParticipantCommand { get; }
+    public ICommand RemoveParticipantCommand { get; }
     public ICommand AddExpenseCommand { get; }
     public ICommand AddRouteLocationCommand { get; }
     public ICommand GenerateReportCommand { get; }
@@ -85,6 +88,7 @@ public class MainViewModel : INotifyPropertyChanged
 
         CreateTripCommand = new RelayCommand(CreateTrip);
         AddParticipantCommand = new RelayCommand(AddParticipant);
+        RemoveParticipantCommand = new RelayCommand(RemoveParticipant);
         AddExpenseCommand = new RelayCommand(AddExpense);
         AddRouteLocationCommand = new RelayCommand(AddRouteLocation);
         GenerateReportCommand = new RelayCommand(GenerateReport);
@@ -275,6 +279,34 @@ public class MainViewModel : INotifyPropertyChanged
             RefreshView();
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+
+    private void RemoveParticipant()
+    {
+        var name = SelectedParticipant;
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            ErrorMessage = "Select a participant to remove.";
+            return;
+        }
+
+        var participant = _trip.Participants.FirstOrDefault(p => string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase));
+        if (participant is null)
+        {
+            return;
+        }
+
+        try
+        {
+            _eventService.RemoveParticipant(_trip, participant.Id);
+            ErrorMessage = string.Empty;
+            Save();
+            RefreshView();
+        }
+        catch (InvalidOperationException ex)
         {
             ErrorMessage = ex.Message;
         }

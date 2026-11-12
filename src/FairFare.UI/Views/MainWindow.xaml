@@ -27,7 +27,8 @@
                         <TextBox Text="{Binding ParticipantName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,8"/>
                         <Button Content="Add participant" Command="{Binding AddParticipantCommand}" Padding="8,4"/>
 
-                        <ListBox ItemsSource="{Binding Participants}" Margin="0,12,0,0" Height="220"/>
+                        <ListBox ItemsSource="{Binding Participants}" SelectedItem="{Binding SelectedParticipant}" Margin="0,12,0,0" Height="180"/>
+                        <Button Content="Remove selected participant" Command="{Binding RemoveParticipantCommand}" Padding="8,4" Margin="0,8,0,0"/>
                     </StackPanel>
 
                     <Border Grid.Column="1" Padding="16" Background="#F8FBFF" CornerRadius="12">
