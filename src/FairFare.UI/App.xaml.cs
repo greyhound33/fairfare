@@ -23,7 +23,7 @@ public partial class App : Application
         ConfigureServices(serviceCollection);
 
         ServiceProvider = serviceCollection.BuildServiceProvider();
-        
+
         try
         {
             using var scope = ServiceProvider.CreateScope();

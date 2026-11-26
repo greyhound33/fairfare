@@ -1,0 +1,55 @@
+name: FairFare CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-lint:
+    name: Build WPF & Code Style
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore local .NET tools
+        run: dotnet tool restore
+
+      - name: Restore dependencies
+        run: dotnet restore src/FairFare.slnx
+
+      - name: Check code formatting
+        run: dotnet format src/FairFare.slnx --verify-no-changes --verbosity diagnostic
+
+      - name: Build solution (Release)
+        run: dotnet build src/FairFare.slnx --no-restore --configuration Release
+
+  test:
+    name: Run Tests (PostgreSQL)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore test project dependencies
+        run: dotnet restore src/FairFare.Tests/FairFare.Tests.csproj
+
+      - name: Start PostgreSQL
+        run: docker compose up -d
+
+      - name: Run unit & integration tests
+        run: dotnet test src/FairFare.Tests/FairFare.Tests.csproj --no-restore --configuration Release --verbosity normal
